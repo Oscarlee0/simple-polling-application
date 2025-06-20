@@ -202,23 +202,24 @@ export default function EditPoll({ params }: { params: { id: string } }) {
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
       </div>
 
-      <div className="relative z-10 py-12 px-4">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="relative z-10 py-6 sm:py-12 px-4">
+        <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
           {/* Header */}
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Button
               variant="ghost"
               onClick={() => router.push("/")}
-              className="flex items-center gap-2 hover:bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg transition-all duration-200"
+              className="flex items-center gap-2 hover:bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg transition-all duration-200 self-start"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to Polls
+              <span className="hidden sm:inline">Back to Polls</span>
+              <span className="sm:hidden">Back</span>
             </Button>
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-purple-900 to-violet-900 bg-clip-text text-transparent">
+            <div className="flex-1">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-900 via-purple-900 to-violet-900 bg-clip-text text-transparent">
                 Edit Poll
               </h1>
-              <p className="text-gray-600 mt-1">Make changes to your poll in the database</p>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">Make changes to your poll in the database</p>
             </div>
           </div>
 
@@ -327,21 +328,21 @@ export default function EditPoll({ params }: { params: { id: string } }) {
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Button
                   onClick={updatePoll}
                   disabled={isUpdating}
-                  className="flex-1 h-12 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="w-full sm:flex-1 h-12 text-sm sm:text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   {isUpdating ? (
                     <>
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      Updating Poll...
+                      <Loader2 className="h-4 sm:h-5 w-4 sm:w-5 mr-2 animate-spin" />
+                      <span className="text-sm sm:text-base">Updating Poll...</span>
                     </>
                   ) : (
                     <>
-                      <Save className="h-5 w-5 mr-2" />
-                      Update Poll
+                      <Save className="h-4 sm:h-5 w-4 sm:w-5 mr-2" />
+                      <span className="text-sm sm:text-base">Update Poll</span>
                     </>
                   )}
                 </Button>
@@ -349,10 +350,10 @@ export default function EditPoll({ params }: { params: { id: string } }) {
                   variant="outline"
                   onClick={() => router.push("/")}
                   disabled={isUpdating}
-                  className="flex-1 h-12 text-base font-semibold hover:bg-gray-50 transition-all duration-200"
+                  className="w-full sm:flex-1 h-12 text-sm sm:text-base font-semibold hover:bg-gray-50 transition-all duration-200"
                 >
-                  <X className="h-5 w-5 mr-2" />
-                  Cancel
+                  <X className="h-4 sm:h-5 w-4 sm:w-5 mr-2" />
+                  <span className="text-sm sm:text-base">Cancel</span>
                 </Button>
               </div>
             </CardContent>

@@ -317,40 +317,42 @@ export default function PollingApp() {
         <div className="absolute top-40 left-1/2 w-80 h-80 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-4000"></div>
       </div>
 
-      <div className="relative z-10 py-12 px-4">
-        <div className="max-w-6xl mx-auto space-y-12">
+      <div className="relative z-10 py-6 sm:py-12 px-4">
+        <div className="max-w-6xl mx-auto space-y-8 sm:space-y-12">
           {/* Header */}
           <div className="text-center space-y-4">
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex-1"></div>
-              <div className="flex-1 flex justify-center">
-                <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
-                  <Sparkles className="h-5 w-5 text-purple-600" />
-                  <span className="text-sm font-medium text-gray-700">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+              <div className="flex-1 order-2 sm:order-1"></div>
+              <div className="flex-1 flex justify-center order-1 sm:order-2">
+                <div className="inline-flex items-center gap-3 px-3 sm:px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
+                  <Sparkles className="h-4 sm:h-5 w-4 sm:w-5 text-purple-600" />
+                  <span className="text-xs sm:text-sm font-medium text-gray-700">
                     {user ? "Your Personal Polls" : "Database-Powered Polls"}
                   </span>
                 </div>
               </div>
-              <div className="flex-1 flex justify-end">
+              <div className="flex-1 flex justify-center sm:justify-end order-3">
                 {user ? (
                   <UserMenu />
                 ) : (
                   <Button
                     onClick={() => setShowAuthModal(true)}
                     variant="outline"
+                    size="sm"
                     className="bg-white/80 backdrop-blur-sm border-white/20 shadow-lg hover:bg-white/90"
                   >
                     <LogIn className="h-4 w-4 mr-2" />
-                    Sign In
+                    <span className="hidden sm:inline">Sign In</span>
+                    <span className="sm:hidden">Sign In</span>
                   </Button>
                 )}
               </div>
             </div>
 
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-purple-900 to-violet-900 bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-purple-900 to-violet-900 bg-clip-text text-transparent px-4">
               Polling Studio
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
               {user
                 ? `Welcome back! Create and manage your personal polls with real-time vote statistics.`
                 : "Create engaging polls and gather insights from your audience with real voting functionality"}
@@ -359,14 +361,16 @@ export default function PollingApp() {
 
           {/* Main Content */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:w-[400px] mx-auto">
-              <TabsTrigger value="create" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-2 max-w-[400px] mx-auto">
+              <TabsTrigger value="create" className="flex items-center gap-2 text-sm">
                 <Vote className="h-4 w-4" />
-                Create Poll
+                <span className="hidden sm:inline">Create Poll</span>
+                <span className="sm:hidden">Create</span>
               </TabsTrigger>
-              <TabsTrigger value="dashboard" className="flex items-center gap-2" disabled={!user}>
+              <TabsTrigger value="dashboard" className="flex items-center gap-2 text-sm" disabled={!user}>
                 <BarChart3 className="h-4 w-4" />
-                Dashboard
+                <span className="hidden sm:inline">Dashboard</span>
+                <span className="sm:hidden">Stats</span>
               </TabsTrigger>
             </TabsList>
 
@@ -380,7 +384,7 @@ export default function PollingApp() {
                     </div>
                     Create New Poll
                   </CardTitle>
-                  <CardDescription className="text-base text-gray-600">
+                  <CardDescription className="text-sm sm:text-base text-gray-600">
                     {user
                       ? "Craft your question and provide compelling answer options to engage your audience"
                       : "Sign in to create and manage your own polls with real-time statistics"}
@@ -485,7 +489,7 @@ export default function PollingApp() {
                   <Button
                     onClick={createPoll}
                     disabled={isCreating}
-                    className="w-full h-12 text-base font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    className="w-full h-12 sm:h-12 text-sm sm:text-base font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {isCreating ? (
                       <>

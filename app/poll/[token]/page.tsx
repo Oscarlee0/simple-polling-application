@@ -158,31 +158,34 @@ export default function PublicPollPage({ params }: { params: { token: string } }
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
       </div>
 
-      <div className="relative z-10 py-12 px-4">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="relative z-10 py-6 sm:py-12 px-4">
+        <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
           {/* Header */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <Button
               variant="ghost"
               onClick={() => router.push("/")}
               className="flex items-center gap-2 hover:bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg transition-all duration-200"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to Home
+              <span className="hidden sm:inline">Back to Home</span>
+              <span className="sm:hidden">Back</span>
             </Button>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
+            <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
               <Vote className="h-4 w-4 text-purple-600" />
-              <span className="text-sm font-medium text-gray-700">Public Poll</span>
+              <span className="text-xs sm:text-sm font-medium text-gray-700">Public Poll</span>
             </div>
           </div>
 
           {/* Poll Card */}
           <Card className="backdrop-blur-sm bg-white/90 border-0 shadow-2xl shadow-purple-500/10">
-            <CardHeader className="pb-6">
-              <div className="flex items-start justify-between">
+            <CardHeader className="pb-4 sm:pb-6">
+              <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="flex-1">
-                  <CardTitle className="text-2xl leading-tight text-gray-900 mb-3">{poll.question}</CardTitle>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <CardTitle className="text-xl sm:text-2xl leading-tight text-gray-900 mb-3">
+                    {poll.question}
+                  </CardTitle>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4" />
                       Created on {poll.created_at}
@@ -197,10 +200,11 @@ export default function PublicPollPage({ params }: { params: { token: string } }
                   variant="outline"
                   size="sm"
                   onClick={() => window.open("/", "_blank")}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 w-full sm:w-auto"
                 >
                   <ExternalLink className="h-4 w-4" />
-                  Create Your Own
+                  <span className="sm:hidden">Create Poll</span>
+                  <span className="hidden sm:inline">Create Your Own</span>
                 </Button>
               </div>
             </CardHeader>
@@ -240,7 +244,7 @@ export default function PublicPollPage({ params }: { params: { token: string } }
                   <Button
                     onClick={handleVote}
                     disabled={selectedOption === null || isVoting}
-                    className="w-full h-12 text-base font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    className="w-full h-12 sm:h-12 text-sm sm:text-base font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {isVoting ? (
                       <>

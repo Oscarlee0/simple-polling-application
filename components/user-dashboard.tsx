@@ -123,7 +123,7 @@ export function UserDashboard({ onNavigateToEdit }: UserDashboardProps) {
   return (
     <div className="space-y-8">
       {/* Dashboard Overview */}
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         <Card className="backdrop-blur-sm bg-white/90 border-0 shadow-xl">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -169,12 +169,12 @@ export function UserDashboard({ onNavigateToEdit }: UserDashboardProps) {
 
       {/* Polls with Statistics */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Poll Statistics</h2>
-            <p className="text-gray-600">Detailed insights for each of your polls</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Poll Statistics</h2>
+            <p className="text-sm sm:text-base text-gray-600">Detailed insights for each of your polls</p>
           </div>
-          <Button onClick={loadPollsWithStats} variant="outline" size="sm">
+          <Button onClick={loadPollsWithStats} variant="outline" size="sm" className="w-full sm:w-auto">
             <TrendingUp className="h-4 w-4 mr-2" />
             Refresh Stats
           </Button>
@@ -187,10 +187,12 @@ export function UserDashboard({ onNavigateToEdit }: UserDashboardProps) {
             return (
               <Card key={poll.id} className="backdrop-blur-sm bg-white/90 border-0 shadow-xl">
                 <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 pr-4">
-                      <CardTitle className="text-xl text-gray-900 mb-2">{poll.question}</CardTitle>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex flex-col lg:flex-row items-start justify-between gap-4">
+                    <div className="flex-1 w-full lg:pr-4">
+                      <CardTitle className="text-lg sm:text-xl text-gray-900 mb-2 break-words">
+                        {poll.question}
+                      </CardTitle>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
                           {poll.created_at}
@@ -199,28 +201,29 @@ export function UserDashboard({ onNavigateToEdit }: UserDashboardProps) {
                           <Users className="h-4 w-4" />
                           {poll.total_votes} votes
                         </div>
-                        {poll.is_public && poll.share_token && (
-                          <Badge variant="secondary" className="bg-green-100 text-green-700 border border-green-200">
-                            <Share2 className="h-3 w-3 mr-1" />
-                            Public
-                          </Badge>
-                        )}
-                        {poll.is_public && !poll.share_token && (
-                          <Badge variant="secondary" className="bg-yellow-100 text-yellow-700 border border-yellow-200">
-                            <Share2 className="h-3 w-3 mr-1" />
-                            Sharing...
-                          </Badge>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {poll.is_public && poll.share_token && (
+                            <Badge variant="secondary" className="bg-green-100 text-green-700 border border-green-200">
+                              <Share2 className="h-3 w-3 mr-1" />
+                              Public
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-row lg:flex-col xl:flex-row gap-2 w-full lg:w-auto">
                       <ShareButton
                         pollId={poll.id}
                         isPublic={poll.is_public ?? false}
                         shareToken={poll.share_token}
                         onShareUpdate={(isPublic, shareToken) => handleShareUpdate(poll.id, isPublic, shareToken)}
                       />
-                      <Button variant="outline" size="sm" onClick={() => onNavigateToEdit(poll.id)}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onNavigateToEdit(poll.id)}
+                        className="flex-1 lg:flex-none"
+                      >
                         <Eye className="h-4 w-4 mr-2" />
                         Edit
                       </Button>

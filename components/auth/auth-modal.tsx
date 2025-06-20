@@ -122,12 +122,12 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md backdrop-blur-sm bg-white/95">
+      <DialogContent className="sm:max-w-md w-[95vw] max-w-[425px] backdrop-blur-sm bg-white/95">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <DialogTitle className="text-xl sm:text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             Welcome to Polling Studio
           </DialogTitle>
-          <DialogDescription className="text-center text-gray-600">
+          <DialogDescription className="text-center text-gray-600 text-sm sm:text-base">
             Sign in to your account or create a new one to start creating polls
           </DialogDescription>
         </DialogHeader>
@@ -191,7 +191,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 <Button
                   onClick={handleSignIn}
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                  className="w-full h-10 sm:h-11 text-sm sm:text-base bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                 >
                   {isLoading ? (
                     <>
@@ -279,7 +279,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 <Button
                   onClick={handleSignUp}
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                  className="w-full h-10 sm:h-11 text-sm sm:text-base bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                 >
                   {isLoading ? (
                     <>

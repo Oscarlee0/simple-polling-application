@@ -178,13 +178,13 @@ export function ShareButton({ pollId, isPublic, shareToken, onShareUpdate }: Sha
           {isPublic ? "Shared" : "Share"}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md backdrop-blur-sm bg-white/95">
+      <DialogContent className="sm:max-w-md w-[95vw] max-w-[425px] backdrop-blur-sm bg-white/95">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <Globe className="h-5 w-5 text-green-600" />
             Share Poll
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm sm:text-base">
             Generate a public link to share your poll with others. Anyone with the link can view and vote on your poll.
           </DialogDescription>
         </DialogHeader>
@@ -247,10 +247,10 @@ export function ShareButton({ pollId, isPublic, shareToken, onShareUpdate }: Sha
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   onClick={copyToClipboard}
-                  className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
+                  className="flex-1 h-10 sm:h-11 text-sm sm:text-base bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
                 >
                   {copied ? (
                     <>
@@ -268,7 +268,7 @@ export function ShareButton({ pollId, isPublic, shareToken, onShareUpdate }: Sha
                   onClick={disableSharing}
                   variant="outline"
                   disabled={isGenerating}
-                  className="hover:bg-red-50 hover:text-red-600 hover:border-red-200"
+                  className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 h-10 sm:h-11 text-sm sm:text-base"
                 >
                   {isGenerating ? (
                     <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
