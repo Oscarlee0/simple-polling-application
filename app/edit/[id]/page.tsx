@@ -7,15 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, Trash2, ArrowLeft, Vote, Save, X } from "lucide-react"
+import { Plus, Trash2, ArrowLeft, Vote, Save, X, Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-
-interface Poll {
-  id: string
-  question: string
-  options: string[]
-  createdAt: string
-}
+import { DatabaseService, type Poll } from "@/lib/database"
 
 export default function EditPoll({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -25,13 +19,16 @@ export default function EditPoll({ params }: { params: { id: string } }) {
   const [options, setOptions] = useState<string[]>([])
   const [errors, setErrors] = useState<{ question?: string; options?: string[] }>({})
   const [isLoading, setIsLoading] = useState(true)
+  const [isUpdating, setIsUpdating] = useState(false)
 
   useEffect(() => {
-    // Load polls from localStorage
-    const savedPolls = localStorage.getItem("polls")
-    if (savedPolls) {
-      const parsedPolls: Poll[] = JSON.parse(savedPolls)
-      const foundPoll = parsedPolls.find((p) => p.id === params.id)
+    loadPoll()
+  }, [params.id])
+
+  const loadPoll = async () => {
+    try {
+      setIsLoading(true)
+      const foundPoll = await DatabaseService.getPollById(params.id)
 
       if (foundPoll) {
         setPoll(foundPoll)
@@ -45,11 +42,32 @@ export default function EditPoll({ params }: { params: { id: string } }) {
         })
         router.push("/")
       }
-    } else {
+    } catch (error) {
+      console.error("Failed to load poll:", error)
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+
+      if (
+        errorMessage.includes("table not found") ||
+        errorMessage.includes("relation") ||
+        errorMessage.includes("does not exist")
+      ) {
+        toast({
+          title: "Database Setup Required",
+          description: "Please run the database setup script first to create the polls table.",
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Error Loading Poll",
+          description: "Failed to load poll from database. Please try again.",
+          variant: "destructive",
+        })
+      }
       router.push("/")
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
-  }, [params.id, router, toast])
+  }
 
   const validateForm = () => {
     const newErrors: { question?: string; options?: string[] } = {}
@@ -121,40 +139,47 @@ export default function EditPoll({ params }: { params: { id: string } }) {
     }
   }
 
-  const updatePoll = () => {
+  const updatePoll = async () => {
     if (!validateForm() || !poll) {
       return
     }
 
-    const validOptions = options.filter((option) => option.trim() !== "")
+    try {
+      setIsUpdating(true)
+      const validOptions = options.filter((option) => option.trim() !== "")
 
-    // Get all polls
-    const savedPolls = localStorage.getItem("polls")
-    if (savedPolls) {
-      const parsedPolls: Poll[] = JSON.parse(savedPolls)
-
-      // Update the poll
-      const updatedPolls = parsedPolls.map((p) => {
-        if (p.id === poll.id) {
-          return {
-            ...p,
-            question: question.trim(),
-            options: validOptions,
-          }
-        }
-        return p
-      })
-
-      // Save back to localStorage
-      localStorage.setItem("polls", JSON.stringify(updatedPolls))
+      await DatabaseService.updatePoll(poll.id, question, validOptions)
 
       toast({
         title: "Poll Updated! 🎉",
-        description: "Your poll has been successfully updated.",
+        description: "Your poll has been successfully updated in the database.",
       })
 
       // Navigate back to the main page
       router.push("/")
+    } catch (error) {
+      console.error("Failed to update poll:", error)
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+
+      if (
+        errorMessage.includes("table not found") ||
+        errorMessage.includes("relation") ||
+        errorMessage.includes("does not exist")
+      ) {
+        toast({
+          title: "Database Setup Required",
+          description: "Please run the database setup script first to create the polls table.",
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Error Updating Poll",
+          description: "Failed to update poll. Please try again.",
+          variant: "destructive",
+        })
+      }
+    } finally {
+      setIsUpdating(false)
     }
   }
 
@@ -162,8 +187,8 @@ export default function EditPoll({ params }: { params: { id: string } }) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full animate-pulse mx-auto"></div>
-          <p className="text-lg text-gray-600">Loading poll...</p>
+          <Loader2 className="w-12 h-12 text-purple-600 animate-spin mx-auto" />
+          <p className="text-lg text-gray-600">Loading poll from database...</p>
         </div>
       </div>
     )
@@ -193,7 +218,7 @@ export default function EditPoll({ params }: { params: { id: string } }) {
               <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-purple-900 to-violet-900 bg-clip-text text-transparent">
                 Edit Poll
               </h1>
-              <p className="text-gray-600 mt-1">Make changes to your poll question and options</p>
+              <p className="text-gray-600 mt-1">Make changes to your poll in the database</p>
             </div>
           </div>
 
@@ -207,7 +232,7 @@ export default function EditPoll({ params }: { params: { id: string } }) {
                 Edit Your Poll
               </CardTitle>
               <CardDescription className="text-base text-gray-600">
-                Update your poll question and answer options to better engage your audience
+                Update your poll question and answer options. Changes will be saved to the database.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
@@ -231,6 +256,7 @@ export default function EditPoll({ params }: { params: { id: string } }) {
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                       : "border-gray-200 focus:border-purple-500 focus:ring-purple-500/20"
                   }`}
+                  disabled={isUpdating}
                 />
                 {errors.question && (
                   <p className="text-sm text-red-500 flex items-center gap-1">
@@ -249,7 +275,7 @@ export default function EditPoll({ params }: { params: { id: string } }) {
                     variant="outline"
                     size="sm"
                     onClick={addOption}
-                    disabled={options.length >= 6}
+                    disabled={options.length >= 6 || isUpdating}
                     className="flex items-center gap-2 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 transition-all duration-200"
                   >
                     <Plus className="h-4 w-4" />
@@ -274,6 +300,7 @@ export default function EditPoll({ params }: { params: { id: string } }) {
                                 ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                                 : "border-gray-200 focus:border-purple-500 focus:ring-purple-500/20"
                             }`}
+                            disabled={isUpdating}
                           />
                           {errors.options?.[index] && (
                             <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
@@ -289,6 +316,7 @@ export default function EditPoll({ params }: { params: { id: string } }) {
                             size="icon"
                             onClick={() => removeOption(index)}
                             className="opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
+                            disabled={isUpdating}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -302,14 +330,25 @@ export default function EditPoll({ params }: { params: { id: string } }) {
               <div className="flex gap-4 pt-4">
                 <Button
                   onClick={updatePoll}
-                  className="flex-1 h-12 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+                  disabled={isUpdating}
+                  className="flex-1 h-12 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                  <Save className="h-5 w-5 mr-2" />
-                  Update Poll
+                  {isUpdating ? (
+                    <>
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                      Updating Poll...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-5 w-5 mr-2" />
+                      Update Poll
+                    </>
+                  )}
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => router.push("/")}
+                  disabled={isUpdating}
                   className="flex-1 h-12 text-base font-semibold hover:bg-gray-50 transition-all duration-200"
                 >
                   <X className="h-5 w-5 mr-2" />
